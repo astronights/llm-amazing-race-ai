@@ -42,7 +42,7 @@ def get_all_cities():
     for city in cities:
         country = city.get('country')
         grouped_by_country[country].append({
-            'name': city.get('city', city.get('city_ascii', '')),
+            'name': city.get('city', city.get('city_ascii', '')), 'country': city['country'],
             'lat': city['lat'], 'lng': city['lng'], 'id': city['id']
         })
 
@@ -70,7 +70,7 @@ def get_nearby_cities(lat: float, lng: float, radius: float = 1000):
     
     cities_sorted = sorted(cities, key=lambda x: x['distance'])
     
-    return cities_sorted[:10]
+    return cities_sorted[:20]
 
 def get_coordinates(city: str):
     body = {**mongo_payload,
