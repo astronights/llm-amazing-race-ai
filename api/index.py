@@ -12,7 +12,7 @@ def get_allowed_origins():
     if environment == 'production':
         return ["https://llm-amazing-race.vercel.app"]
     elif environment == 'development':
-        return ["http://localhost:3000"]
+        return ["http://localhost:3000", "https://llm-amazing-race.vercel.app"]
     return []  # No origins allowed by default
 
 app = Flask(__name__)
