@@ -6,7 +6,6 @@ from flask import Flask, request, jsonify
 from .services.llm import chat
 from .services.web_utils import get_all_cities, get_coordinates, get_attractions
 
-
 def get_allowed_origins():
     environment = os.getenv('FLASK_ENV', 'development')
     if environment == 'production':
@@ -17,13 +16,6 @@ def get_allowed_origins():
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": get_allowed_origins()}})
-
-@app.before_request
-def restrict_cors():
-    if 'FLASK_ENV' in os.environ and os.environ['FLASK_ENV'] == 'production':
-        origin = request.headers.get('Origin')
-        if origin not in get_allowed_origins():
-            return jsonify({"error": "Forbidden"}), 403
 
 
 @app.route('/')
