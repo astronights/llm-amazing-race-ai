@@ -2,7 +2,7 @@
 
 Welcome to the **LLM-Based Text Adventure: Amazing Race** project! This is an interactive, location-based text adventure game inspired by "The Amazing Race." The game challenges players to solve riddles and navigate through various cities and points of interest, using an AI-powered system to deliver a unique and engaging experience.
 
-**NOTE**: This repository only holds the backend LLM + data code for this project
+**NOTE**: This repository only holds the backend LLM + data code for this project.
 
 ### Complementary Repository: https://github.com/astronights/llm-amazing-race-ui
 
