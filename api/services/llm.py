@@ -9,7 +9,6 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 def get_description(city: str, country: str):
     response = model.generate_content(description.format(city=city, country=country)).text
-    print(response)
     return {'description': response}
 
 def make_puzzle(city: str, sights: list, n=10):

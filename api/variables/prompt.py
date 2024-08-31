@@ -9,14 +9,13 @@ I want the output as a list of JSONs with one record for each stop.
 Each record should include the text based riddle for the stop, a one line hint,
 the name of the place as the answer, as well as a small task. The task should
 be a JSON record of its own with a small question the user will have to Google
-about the place and the answer of the task. For each record, also add in an image
-of the sight. Ensure the image is in the markdown format with only the URL and no
-alt text. Make sure the task questions have objective answers. For each record, 
-also add a message to congratulate the user when they guess the answer to the 
-riddle correctly. This congratulatory message should be a one line message
-describing the user reaching  the stop. Do not repeat stops. Along with the {n} stops, 
-make sure the list of JSONs also has a record for the starting and the ending stop.
-Please output the JSON output directly without any backticks so it can be parsed:
+about the place and the answer of the task. Make sure the task questions have 
+objective answers. For each record, also add a message to congratulate the user 
+when they guess the answer to the  riddle correctly. This congratulatory message 
+should be a one line message describing the user reaching  the stop. Do not repeat 
+stops. Along with the {n} stops, make sure the list of JSONs also has a record 
+for the starting and the ending stop. Please output the JSON output directly below
+without any backticks and json keyword so it can be parsed:
 '''
 
 description = '''

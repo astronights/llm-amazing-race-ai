@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask import Flask, request
 
 from .services.llm import route_request
-from .services.web_utils import get_all_cities, get_nearby_cities, get_coordinates, get_attractions
+from .services.web_utils import get_all_cities, get_nearby_cities, get_attractions
 
 def get_allowed_origins():
     environment = os.getenv('FLASK_ENV', 'development')
@@ -30,10 +30,9 @@ def all_cities():
 def city_coords():
     return get_nearby_cities(**request.json)
 
-@app.get('/api/city/<city>/attr')
-def city_attrs(city: str):
-    coords = get_coordinates(city)
-    ats = get_attractions(*coords)
+@app.post('/api/city/attr')
+def city_attrs():
+    ats = get_attractions(**request.json)
     return ats
 
 @app.post('/api/llm/chat')

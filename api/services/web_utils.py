@@ -71,15 +71,6 @@ def get_nearby_cities(lat: float, lng: float, radius: float = 1000):
     
     return cities_sorted[:20]
 
-def get_coordinates(city: str):
-    body = {**mongo_payload,
-            'filter': {'city_ascii': city},
-            'projection': {'lat': 1, 'lng': 1, '_id': 0}}
-    response = requests.post(mongo_url, headers=mongo_headers, json=body)
-    vals = response.json()['documents'][0]
-    return [vals['lat'], vals['lng']]
-
-
 def detail(item: dict):
     return {
         'lat': item.get('lat', item.get('center', {}).get('lat')),
@@ -101,5 +92,7 @@ def get_attractions(lat: float, lng: float, n: int = 10, radius: float = 10000):
         data = response.json()['elements']
         val = [detail(point) for point in data]
         out.extend(val)
+
+    print(out, lat, lng)
 
     return out if len(out) < n else random.choices(out, k=n)
