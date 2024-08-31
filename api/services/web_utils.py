@@ -1,13 +1,38 @@
 import random
+from math import radians, degrees, sin, cos, atan2, sqrt
+
 import requests
 from collections import defaultdict
 
 from ..variables.overpass import url as overpass_url, attractions, query
 from ..variables.mongo import mongo_url, mongo_headers, mongo_payload
 
+def haversine(lat1, lon1, lat2, lon2):
+    """Calculate the great-circle distance between two points."""
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    radius = 6371 
+    return radius * c
+
+def calculate_bounds(lat, lng, radius):
+    R = 6371
+    
+    dlat = radius / R
+    dlon = radius / (R * cos(radians(lat)))
+    
+    min_lat = lat - degrees(dlat)
+    max_lat = lat + degrees(dlat)
+    min_lng = lng - degrees(dlon)
+    max_lng = lng + degrees(dlon)
+    
+    return min_lat, max_lat, min_lng, max_lng
+
 
 def get_all_cities():
-    body = {**mongo_payload, 'projection': {'city_ascii': 1, 'city': 1, 'iso2': 1,
+    body = {**mongo_payload, 'projection': {'city_ascii': 1, 'city': 1,
                                             'country': 1, 'lat': 1, 'lng': 1, 'id': 1}}
     response = requests.post(mongo_url, headers=mongo_headers, json=body)
 
@@ -17,12 +42,35 @@ def get_all_cities():
     for city in cities:
         country = city.get('country')
         grouped_by_country[country].append({
-            'name': city.get('city_ascii', city.get('city', '')), 'ciso': city['iso2'],
+            'name': city.get('city', city.get('city_ascii', '')),
             'lat': city['lat'], 'lng': city['lng'], 'id': city['id']
         })
 
     return dict(grouped_by_country)
 
+
+def get_nearby_cities(lat: float, lng: float, radius: float = 1000):
+    min_lat, max_lat, min_lng, max_lng = calculate_bounds(lat, lng, radius)
+    
+    query = {
+        'lat': {'$gte': min_lat, '$lte': max_lat},
+        'lng': {'$gte': min_lng, '$lte': max_lng}
+    }
+
+    body = {**mongo_payload,
+            'filter': query,
+            'projection': {'city_ascii': 1, 'city': 1, 'country': 1,
+                           'iso2': 1, 'lat': 1, 'lng': 1, 'id': 1}}
+    
+    cities = requests.post(mongo_url, headers=mongo_headers, json=body).json()['documents']
+
+    for city in cities:
+        city['distance'] = haversine(lat, lng, city['lat'], city['lng'])
+        city['name'] = city.get('city', city.get('city_ascii', ''))
+    
+    cities_sorted = sorted(cities, key=lambda x: x['distance'])
+    
+    return cities_sorted[:10]
 
 def get_coordinates(city: str):
     body = {**mongo_payload,
