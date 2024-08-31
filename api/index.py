@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000", "https://https://llm-amazing-race.vercel.app/"])
 
 @app.route('/')
-def hello_world():
+def root_hello():
     return '<p>Hello, World!</p>'
 
 @app.get('/api/city/all')
