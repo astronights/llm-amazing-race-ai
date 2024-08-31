@@ -3,7 +3,7 @@ import os
 from flask_cors import CORS
 from flask import Flask, request
 
-from .services.llm import chat
+from .services.llm import route_request
 from .services.web_utils import get_all_cities, get_nearby_cities, get_coordinates, get_attractions
 
 def get_allowed_origins():
@@ -37,9 +37,7 @@ def city_attrs(city: str):
     return ats
 
 @app.post('/api/llm/chat')
-def try_chat():
-    city = request.json['city']
-    coords = get_coordinates(city)
-    sights = get_attractions(*coords)
-    ans = chat(city, sights)
-    return ans
+def chat():
+    body = request.json
+    response = route_request(body['message'], body['data'])
+    return response

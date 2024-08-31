@@ -8,7 +8,6 @@ from ..variables.overpass import url as overpass_url, attractions, query
 from ..variables.mongo import mongo_url, mongo_headers, mongo_payload
 
 def haversine(lat1, lon1, lat2, lon2):
-    """Calculate the great-circle distance between two points."""
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
     dlat = lat2 - lat1
     dlon = lon2 - lon1
@@ -94,7 +93,7 @@ def detail(item: dict):
     }
 
 
-def get_attractions(lat: float, lng: float, n: int = 10, radius: float = 5000):
+def get_attractions(lat: float, lng: float, n: int = 10, radius: float = 10000):
     out = []
     for attr in attractions:
         response = requests.get(overpass_url, params={'data': query.format(
