@@ -1,14 +1,13 @@
 from .services.web_utils import get_all_cities, get_coordinates, get_attractions
 from .services.llm import chat
 
-import uuid
 from flask import Flask, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:3000", "https://https://llm-amazing-race.vercel.app/"])
 
-@app.route('/api/hello')
+@app.route('/')
 def hello_world():
     return '<p>Hello, World!</p>'
 
